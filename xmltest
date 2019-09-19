@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+
+
+namespace XMLCompare
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            XmlDocument document = new XmlDocument();
+            document.Load("/Users/Alex/source/repos/example.xml");
+            XmlNodeList nodos= document.ChildNodes;
+            leerXML(nodos);
+            Console.ReadKey();
+        }
+
+        public static void leerXML(XmlNodeList level)
+        {
+            foreach(XmlNode node in level)
+            {
+                if(node.Attributes!= null)
+                {
+                    foreach(XmlAttribute atribute in node.Attributes)
+                    {
+                        Console.WriteLine(node.Name+" "+atribute.Name+" = "+atribute.Value);
+                    }  
+                }
+                /*else
+                {
+                    Console.WriteLine(node.Name);
+                }*/
+
+                if (node.HasChildNodes)
+                {
+                    leerXML(node.ChildNodes);
+                }
+            }
+        }
+    }
+}
