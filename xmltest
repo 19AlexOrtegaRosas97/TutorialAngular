@@ -34,18 +34,20 @@ namespace XMLCompare
                 {
                     foreach (XmlAttribute atribute in x.Attributes)
                     {
-                        String root= "";
+                        String parent= "";
                         string ruta = x.Name;
-                        while (root!="#document")
+                        string actual = x.Name;
+                        while (parent != "#document")
                         {
-                            root = getParentList(lista, x.Name);
+                            parent = getParentList(lista, actual);
 
-                            if (x.ParentNode.Name != "#document" || root != "#document")
+                            if (x.ParentNode.Name != "#document")
                             {
-                                ruta += "/" + x.ParentNode.Name;
-                                ruta += "/" + root;
-                            }
+                                if(parent!= "#document")
+                                    ruta += "/" + parent;
 
+                                actual = parent;
+                            }
                         }
 
                         Console.WriteLine(ruta + " " + atribute.Name + " = " + atribute.Value);
@@ -60,14 +62,10 @@ namespace XMLCompare
             {
                 if (x.Name == valor)
                 {
-                    valor = x.ParentNode.Name;
-                }
-                else
-                {
-                    valor = "#document";
+                   return x.ParentNode.Name;
                 }
             }
-            return valor;
+            return "#document";
         }
 
         public static List<XmlNode> leerXML2(XmlNodeList level,List<XmlNode> lista)
