@@ -18,7 +18,81 @@ namespace XMLCompare
             //leerXML(nodos);
             Console.WriteLine(getNumEmploye(nodos, "NA"));
             Console.WriteLine(countAtributes(nodos));
+            List<XmlNode> lista = new List<XmlNode>();
+            lista=leerXML2(nodos, lista);
+            getData(lista);
             Console.ReadKey();
+        }
+
+        public static void getData(List<XmlNode> lista)
+        {
+            foreach(XmlNode x in lista)
+            {
+                Console.WriteLine("VA AQUI---->"+x.Name);
+
+                if (x.Attributes != null)
+                {
+                    foreach (XmlAttribute atribute in x.Attributes)
+                    {
+                        String root= "";
+                        string ruta = x.Name;
+                        while (root!="#document")
+                        {
+                            root = getParentList(lista, x.Name);
+
+                            if (x.ParentNode.Name != "#document" || root != "#document")
+                            {
+                                ruta += "/" + x.ParentNode.Name;
+                                ruta += "/" + root;
+                            }
+
+                        }
+
+                        Console.WriteLine(ruta + " " + atribute.Name + " = " + atribute.Value);
+                    }
+                }
+            }
+        }
+
+        public static string getParentList(List<XmlNode> lista,string valor)
+        {
+            foreach(XmlNode x in lista)
+            {
+                if (x.Name == valor)
+                {
+                    valor = x.ParentNode.Name;
+                }
+                else
+                {
+                    valor = "#document";
+                }
+            }
+            return valor;
+        }
+
+        public static List<XmlNode> leerXML2(XmlNodeList level,List<XmlNode> lista)
+        {
+            foreach (XmlNode node in level)
+            {
+                lista.Add(node);
+                if (node.Attributes != null)
+                {
+                    foreach (XmlAttribute atribute in node.Attributes)
+                    {
+                        //Console.WriteLine(node.Name + " " + atribute.Name + " = " + atribute.Value);
+                    }
+                }
+                /*else
+                {
+                    Console.WriteLine(node.Name);
+                }*/
+
+                if (node.HasChildNodes)
+                {
+                    lista=leerXML2(node.ChildNodes,lista);
+                }       
+            }
+            return lista;
         }
 
         public static void leerXML(XmlNodeList level)
