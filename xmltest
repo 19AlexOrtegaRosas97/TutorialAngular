@@ -15,7 +15,9 @@ namespace XMLCompare
             XmlDocument document = new XmlDocument();
             document.Load("/Users/Alex/source/repos/example.xml");
             XmlNodeList nodos= document.ChildNodes;
-            leerXML(nodos);
+            //leerXML(nodos);
+            Console.WriteLine(getNumEmploye(nodos, "NA"));
+            Console.WriteLine(countAtributes(nodos));
             Console.ReadKey();
         }
 
@@ -40,6 +42,51 @@ namespace XMLCompare
                     leerXML(node.ChildNodes);
                 }
             }
+        }
+
+        public static string getNumEmploye(XmlNodeList level,string result)
+        {
+            foreach (XmlNode node in level)
+            {
+                if (node.Attributes != null)
+                {
+                    foreach (XmlAttribute atribute in node.Attributes)
+                    {
+                        if(atribute.Name== "NumEmpleado")
+                        {
+                            result = atribute.Value;
+                        }
+                    }
+                }
+                if (node.HasChildNodes)
+                {
+                    result= getNumEmploye(node.ChildNodes,result);
+                }
+            }
+            return result;
+        }
+
+        public static int countAtributes(XmlNodeList level)
+        {
+            int result = 0;
+            foreach (XmlNode node in level)
+            {
+                if (node.Attributes != null)
+                {
+                    foreach (XmlAttribute atribute in node.Attributes)
+                    {
+                        if(node.Name != "tfd:TimbreFiscalDigital")
+                        {
+                            result++;
+                        }            
+                    }
+                }
+                if (node.HasChildNodes)
+                {
+                    result+=countAtributes(node.ChildNodes);
+                }
+            }
+            return result;
         }
     }
 }
